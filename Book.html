@@ -9,43 +9,93 @@
         <h1>Online Book Store System</h1>
         <h2>3. Book Selection Page</h2>
         <br>
+
+        <!-- Search Bar Constraint -->
+        <div style="background-color: #f2f2f2; padding: 15px; width: 60%; border-radius: 5px;">
+            <h3>Search Books</h3>
+            <input type="text" id="searchInput" placeholder="Search by Title or Category..." onkeyup="searchBooks()" style="padding:5px; width:60%;">
+        </div>
+        <br>
         
-        <!-- The form now calls a JavaScript function before going to payment.html -->
-        <form onsubmit="return proceedToPayment()">
-            <p>Select the books you want to buy:</p>
-            
-            <!-- Added specific values to each checkbox -->
-            <input type="checkbox" class="book-item" value="10"> Java Programming - ₹10 <br><br>
-            <input type="checkbox" class="book-item" value="15"> Web Technology - ₹15 <br><br>
-            <input type="checkbox" class="book-item" value="20"> Data Structures - ₹20 <br><br>
-            <br>
-            
-            <input type="submit" value="Proceed to Payment Gateway">
-        </form>
+        <p>Select the books you want to buy:</p>
+        
+        <!-- Books Table for clear display of Category, Price & Availability -->
+        <table border="1" cellpadding="10" style="text-align: center; border-collapse: collapse;">
+            <tr>
+                <th>Select</th>
+                <th>Book Title</th>
+                <th>Category</th>
+                <th>Price</th>
+                <th>Availability</th>
+            </tr>
+            <tr class="book-row">
+                <td><input type="checkbox" class="book-item" value="10" data-title="Java Programming"></td>
+                <td class="book-title">Java Programming</td>
+                <td class="book-category">Programming</td>
+                <td>₹10</td>
+                <td>In Stock</td>
+            </tr>
+            <tr class="book-row">
+                <td><input type="checkbox" class="book-item" value="15" data-title="Web Technology"></td>
+                <td class="book-title">Web Technology</td>
+                <td class="book-category">Web Development</td>
+                <td>₹15</td>
+                <td>In Stock</td>
+            </tr>
+            <tr class="book-row">
+                <td><input type="checkbox" class="book-item" value="20" data-title="Data Structures"></td>
+                <td class="book-title">Data Structures</td>
+                <td class="book-category">Programming</td>
+                <td>₹20</td>
+                <td>In Stock</td>
+            </tr>
+        </table>
+        <br>
+        
+        <button onclick="proceedToPayment()">Proceed to Payment Gateway</button>
         
         <br><br>
-        <a href="user.html">← Logout</a>
+        <a href="login.html">← Logout</a>
     </center>
 
     <script>
+        // 1. Search Function for Title or Category
+        function searchBooks() {
+            let input = document.getElementById('searchInput').value.toLowerCase();
+            let rows = document.getElementsByClassName('book-row');
+            
+            for (let i = 0; i < rows.length; i++) {
+                let title = rows[i].getElementsByClassName('book-title')[0].textContent.toLowerCase();
+                let category = rows[i].getElementsByClassName('book-category')[0].textContent.toLowerCase();
+                
+                if (title.includes(input) || category.includes(input)) {
+                    rows[i].style.display = "";
+                } else {
+                    rows[i].style.display = "none";
+                }
+            }
+        }
+
+        // 2. Proceed to Payment Function passing prices and book names
         function proceedToPayment() {
             let total = 0;
-            
-            // 1. Get all checkboxes with the class 'book-item'
+            let selectedBooks = [];
             const checkboxes = document.getElementsByClassName('book-item');
             
-            // 2. Loop through them and add the value of checked boxes to the total
             for (let i = 0; i < checkboxes.length; i++) {
                 if (checkboxes[i].checked) {
                     total += parseInt(checkboxes[i].value);
+                    selectedBooks.push(checkboxes[i].getAttribute('data-title'));
                 }
             }
             
-            // 3. Redirect to the payment page and pass the total as a URL parameter
-            window.location.href = "payment.html?total=" + total;
+            if (total === 0) {
+                alert("Please select at least one book!");
+                return;
+            }
             
-            // 4. Return false to prevent the default form submission (so our redirect works)
-            return false;
+            // Redirect with total price and selected book names encoded in URL
+            window.location.href = "payment.html?total=" + total + "&books=" + encodeURIComponent(selectedBooks.join(','));
         }
     </script>
 

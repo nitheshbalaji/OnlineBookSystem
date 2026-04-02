@@ -10,22 +10,52 @@
         <h2>2. Administrator Page</h2>
         <br>
         
-        <form>
+        <form id="adminForm" onsubmit="event.preventDefault(); authenticate();">
             Admin ID: <input type="text" required><br><br>
             Secret Key: <input type="password" required><br><br>
-            <input type="button" value="Authenticate Admin" onclick="alert('Admin Authenticated Successfully')">
+            <input type="submit" value="Authenticate Admin">
         </form>
         
         <br>
-        <h3>Admin Tasks:</h3>
-        <p>1. Add New Books</p>
-        <p>2. Delete Out of Stock Books</p>
-        <p>3. View Registered Users</p>
+        <div id="salesReport" style="display: none; background-color: #e6f7ff; padding: 15px; width: 60%; border-radius: 5px;">
+            <h3>Daily Consolidated Sales Report</h3>
+            <p><strong>Total number of orders placed today:</strong> <span id="ordersCount">0</span></p>
+            <p><strong>Total unique books sold today:</strong> <span id="uniqueBooksCount">0</span></p>
+            <p><strong>Books targeted by sales:</strong> <br><span id="booksList">None</span></p>
+            
+            <br>
+            <button onclick="clearData()" style="color: red;">Clear Today's Simulated Data</button>
+        </div>
         
         <br><br>
-        <a href="user.html">← Back to User Login</a>
+        <a href="login.html">← Back to User Login</a>
     </center>
+
+    <script>
+        function authenticate() {
+            alert('Admin Authenticated Successfully');
+            document.getElementById('adminForm').style.display = 'none';
+            document.getElementById('salesReport').style.display = 'block';
+            
+            loadData();
+        }
+
+        function loadData() {
+            let totalOrders = localStorage.getItem('totalOrders') || "0";
+            let booksSold = JSON.parse(localStorage.getItem('booksSold') || "[]");
+
+            document.getElementById('ordersCount').textContent = totalOrders;
+            document.getElementById('uniqueBooksCount').textContent = booksSold.length;
+            document.getElementById('booksList').textContent = booksSold.length > 0 ? booksSold.join(', ') : "None";
+        }
+
+        function clearData() {
+            localStorage.removeItem('totalOrders');
+            localStorage.removeItem('booksSold');
+            alert('Daily logs cleared!');
+            loadData();
+        }
+    </script>
 
 </body>
 </html>
-
