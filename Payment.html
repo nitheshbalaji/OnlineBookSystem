@@ -10,16 +10,43 @@
         <h2>4. Payment Page</h2>
         <br>
         
+        <!-- Total amount will be displayed here -->
+        <h3>Total Amount to Pay: Rs. <span id="totalAmount">0.00</span></h3>
+        <br>
+
         <form>
             Card Number: <input type="text" required><br><br>
             Expiry Date: <input type="text" placeholder="MM/YY" required><br><br>
             CVV Number: <input type="password" required><br><br>
-            <input type="button" value="Make Payment" onclick="alert('Payment Successful! Your books are ordered.')">
+            <input type="button" value="Make Payment" onclick="processPayment()">
         </form>
         
         <br><br>
         <a href="book.html">← Go Back to Books</a>
     </center>
+
+    <script>
+        // 1. Function to read the amount from the URL when the page loads
+        function getAmountFromURL() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const amount = urlParams.get('total');
+            
+            if (amount) {
+                document.getElementById('totalAmount').textContent = amount;
+            } else {
+                document.getElementById('totalAmount').textContent = "0.00 (No books selected)";
+            }
+        }
+
+        // 2. Function triggered when the payment button is clicked
+        function processPayment() {
+            const amount = document.getElementById('totalAmount').textContent;
+            alert('Payment Successful! Rs. ' + amount + ' has been deducted. Your books are ordered.');
+        }
+
+        // Run the function on load
+        window.onload = getAmountFromURL;
+    </script>
 
 </body>
 </html>

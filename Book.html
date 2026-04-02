@@ -10,19 +10,44 @@
         <h2>3. Book Selection Page</h2>
         <br>
         
-        <!-- Action attribute points directly to the payment.html file -->
-        <form action="payment.html">
+        <!-- The form now calls a JavaScript function before going to payment.html -->
+        <form onsubmit="return proceedToPayment()">
             <p>Select the books you want to buy:</p>
-            <input type="checkbox"> Java Programming - $10 <br><br>
-            <input type="checkbox"> Web Technology - $15 <br><br>
-            <input type="checkbox"> Data Structures - $20 <br><br>
+            
+            <!-- Added specific values to each checkbox -->
+            <input type="checkbox" class="book-item" value="10"> Java Programming - ₹10 <br><br>
+            <input type="checkbox" class="book-item" value="15"> Web Technology - ₹15 <br><br>
+            <input type="checkbox" class="book-item" value="20"> Data Structures - ₹20 <br><br>
             <br>
+            
             <input type="submit" value="Proceed to Payment Gateway">
         </form>
         
         <br><br>
         <a href="user.html">← Logout</a>
     </center>
+
+    <script>
+        function proceedToPayment() {
+            let total = 0;
+            
+            // 1. Get all checkboxes with the class 'book-item'
+            const checkboxes = document.getElementsByClassName('book-item');
+            
+            // 2. Loop through them and add the value of checked boxes to the total
+            for (let i = 0; i < checkboxes.length; i++) {
+                if (checkboxes[i].checked) {
+                    total += parseInt(checkboxes[i].value);
+                }
+            }
+            
+            // 3. Redirect to the payment page and pass the total as a URL parameter
+            window.location.href = "payment.html?total=" + total;
+            
+            // 4. Return false to prevent the default form submission (so our redirect works)
+            return false;
+        }
+    </script>
 
 </body>
 </html>
